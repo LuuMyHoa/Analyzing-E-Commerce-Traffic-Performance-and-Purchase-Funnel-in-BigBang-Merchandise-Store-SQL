@@ -2,13 +2,13 @@
 
 ## Table of Contents
 
-* [Business Objectives](#business-objectives)
+* [Business Problem](#business-problem)
 * [Dataset](#dataset)
-* [SQL Analysis](#sql-analysis)
+* [Analysis](#analysis)
 * [Insights](#insights)
 * [Recommendations](#recommendations)
 
-## Business Objectives
+## Business Problem
 This project analyzes Google Analytics e-commerce session data to evaluate website performance and customer behavior. 
 
 The analysis aims to: 
@@ -48,7 +48,7 @@ The table below summarizes the key fields used in this analysis. The complete da
 | hits.product.productSKU | STRING | Product SKU. | 
 | hits.product.v2ProductName | STRING | Product Name. |
 
-## SQL Analysis
+## Analysis
 The project answers several key business questions using SQL in Google BigQuery. 
 
 The full SQL analysis can be viewed [here](https://console.cloud.google.com/bigquery?sq=961620975192:4679c420e9cf426f872f57eb6c3a284e).
