@@ -342,7 +342,7 @@ ORDER BY quantity DESC;
 | Collapsible Shopping Bag                     | 160      |
 | 7" Dog Frisbee                               | 48       |
 | Google Laptop and Cell Phone Stickers       | 41       |
-|---------------------------------------------|----------|
+|-----|-----|
 
 *Top 5 rows of the full results. The complete dataset is available in the repository.*
 
