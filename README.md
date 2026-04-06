@@ -18,14 +18,14 @@ This project uses SQL to analyze data from BigBang Merchandise Store to:
 
 * Understand customer behavior in the purchase funnel (product view → add to cart → purchase).
 
-* Ranking products by revenue and identify frequently co-purchased products.
+* Rank products by revenue and identify frequently co-purchased products.
   
 * Provide data-driven insights that support optimization of marketing strategies, website experience, and revenue growth.
 
 ## 📂 Dataset
 Google BigQuery Public Dataset: ```bigquery-public-data.google_analytics_sample.ga_sessions```
 
-Some fields are nested and repeated, therefore UNNEST() is used in SQL queries to extract product-level information. 
+The dataset contains nested and repeated fields (especially at the product level), UNNEST() is used to extract detailed product interactions.
 
 The complete dataset schema can be found [here](https://support.google.com/analytics/answer/3437719?hl=en).
 
@@ -79,9 +79,11 @@ ORDER BY 1;
 | 2017-05 | 65371  | 255077    | 1160         |
 | 2017-06 | 63578  | 233210    | 971          |
 
-👉🏻 Insights: While total visits and pageviews declined (↓5.29% and ↓3.86%) throughout Quarter 2 2017, May emerged as the peak performance month with the highest conversion rate (~ 1.77%) and deepest user engagement (3.9 pageviews per visit).
-
-✅ Recommendations: Replicate May's winning marketing strategy and investigate high-bounce sources to stabilize traffic and boost conversion efficiency.
+👉🏻 Observation:
+- Total visits decreased from 67K (Apr) to 63K (Jun) (~5.3% decline)
+- Pageviews also declined (~3.9%) in Quarter 2 2017
+- May recorded the highest transactions (1,160)
+- Conversion rate peaked in May (~1.77%)
 
 **2. Bounce Rate per Traffic Source in June 2017.**
 
@@ -107,11 +109,15 @@ ORDER BY total_visits DESC;
 
 *Top 5 rows of the full results. The complete dataset is available in the repository.*
 
-👉🏻 Insights: Direct and Google are the primary traffic drivers, accounting for over 87% of total visits. Their stable bounce rates (46% - 53%) indicate a high-intent audience that consistently finds relevant products.
+👉🏻 Observation:
+- Direct and Google account for majority of traffic (>85%)
+- Bounce rate ranges:
+  - Direct: ~46%
+  - Google: ~53%
+  - YouTube: ~67% (highest among top sources)
+- Several minor sources show extremely high bounce rates (>70%)
 
-✅ Recommendations: To improve performance, focus on User Experience Optimization and ensuring landing page content perfectly aligns with User Search Intent.
-
-**3. Revenue by traffic source by week, by month in Quarter 2 2017.**
+**3. Revenue by traffic source by month, by  in Quarter 2 2017.**
 
 ```sql
 WITH product_data AS (
@@ -159,10 +165,11 @@ ORDER BY time_type DESC, time, revenue DESC;
 
 *A summary of the full results. The complete dataset is available in the repository.*
 
-👉🏻 Insights: Direct, dfa and google generate the majority of revenue for BigBang Store, contributing over 95% of total revenue. In contrast, social channels like YouTube and Facebook contribute negligible revenue despite driving significant traffic volumes.
-
-✅ Recommendations: For high-performing channels (Direct, DFA, Google): Strengthen loyalty programs, personalized email campaigns, and remarketing strategies. For low-performing channels (Social, YouTube): Improve traffic quality and conversion efficiency.
-
+👉🏻 Observation:
+- Revenue is heavily concentrated in a few sources: Direct, DFA, and Google contribute the majority
+- Social sources (YouTube, Facebook) generate minimal revenue
+- Revenue trends are relatively stable across months
+  
 **4. Average number of pageviews by purchaser type: purchasers vs non-purchasers in Q2 2017.**
 
 ```sql
@@ -184,8 +191,6 @@ ORDER BY month;
 | 2017-06 | 23.89                    | 3.36                         |
 
 👉🏻 Insights: Purchasers browse 6-7x more pages than non-purchasers, indicating purchasers explore the site deeply before buying.
-
-✅ Recommendations: Improve product discovery for low-engagement users by implementing personalized recommendations and “related products” early in the session.
 
 **5. Average revenue per session. Only include purchaser in Q2 2017.**
 
@@ -217,10 +222,9 @@ ORDER BY month;
 | 2017-05 | 122.18                  |
 | 2017-06 | 135.43                  |
 
-👉🏻 Insights: In Quarter 2 2017, revenue per purchasing session dropped significantly from $240 in April to $135 in June (↓ 44%).  
-This indicates that while May had the most transactions, the average revenue per purchase session was much lower than in April.
-
-✅ Recommendations: To recover high session values, implement bundling or "Frequently Bought Together" strategies. Introduce minimum spend incentives (free shipping threshold) to increase AOV. 
+👉🏻 Observation:
+- Average revenue per purchasing session dropped significantly from Apr $240 to Jun $135 (~44% decline)
+- Despite higher transactions in May, revenue per session is lower
 
 **6. Calculate cohort map from product view to addtocart to purchase in Q2 2017.**
 
@@ -255,9 +259,10 @@ ORDER BY month;
 | 2017-05 | 25469         | 10083       | 3285      | 39.59                | 12.9              |
 | 2017-06 | 22148         | 9020        | 2785      | 40.73                | 12.57             |
 
-👉🏻 Insights: The funnel shows a healthy Add-to-cart rate (~40%), but a significant drop-off occurs at the final checkout stage, with the Purchase rate remaining around 12%. 
-
-✅ Recommendations: Introducing urgency tactics (limited-time offers, low-stock signals) and simplifying the checkout experience could improve conversion at the bottom of the purchase funnel.
+👉🏻 Observation: 
+- Add-to-cart rate remains stable (~40%)
+- Purchase rate is significantly lower (~12–13%)
+- Large drop-off occurs between add-to-cart and purchase stages
 
 **7. Ranking 5 products by revenue (June 2017)**
 
@@ -295,10 +300,10 @@ ORDER BY revenue_rank, total_revenue DESC;
 | Google Hard Cover Journal                   | 3870915789 | 4            |
 | Sport Bag                                   | 3598704997 | 5            |
 
-👉🏻 Insights: Revenue is highly concentrated in a few top products (Headphones, Bottles), showing a “winner-takes-most” product distribution.
-
-✅ Recommendations: Ensuring inventory availability and prioritizing these products in homepage, ads, and campaigns to draw traffic, as they have a proven track record of generating high revenue.
-
+👉🏻 Observation:
+- Revenue is concentrated in a small number of products
+- Top 5 products contribute a disproportionately large share of revenue
+  
 **8. Other products purchased by customers who purchased product "Google Bluetooth Headphones" in June 2017. Output should show product name and the quantity was ordered.**
 
 ```sql
@@ -341,18 +346,28 @@ ORDER BY quantity DESC;
 
 *Top 5 rows of the full results. The complete dataset is available in the repository.*
 
-👉🏻 Insights: Customers who purchase Google Bluetooth Headphones often buy accessories (Bottle, Bag, Stickers), indicating strong cross-sell behavior.
-
-✅ Recommendations: Implementing a "Frequently Bought Together" engine and offering bundles to encourage immediate cross-selling at checkout.
+👉🏻 Observation: Customers who purchase Google Bluetooth Headphones often buy accessories (Bottle, Bag, Stickers), indicating strong cross-sell behavior.
 
 ## 📝 Conclusion
 
-This analysis reveals that in Quarter 2 2017, BigBang Merchandise Store is facing a classic E-commerce challenge: declining traffic quality and inefficient bottom-funnel conversion.
+### 📍Key Insights
 
-📍 Strategic Action Plan
+- Declining Traffic Quality: Overall visits and pageviews decreased in Q2. High bounce rates in several traffic sources (especially social channels)
 
-|Target measures| Priority actions | Expected results |
-| ------ | ------------------------ | ---------------------------- |
-|Purchase rate|Simplify and optimize the checkout process (fewer steps, guest checkout, UX clarity)|Increase purchase Rate from 12% to 15%|
-|Conversion Rate|Improve landing page relevance for high-bounce channels (Youtube, Facebook)|Reduce bounce rate from 60% to 50%|
-|Average revenue per purchase session|Introduce bundling & “frequently bought together”| Increase avg revenue per purchase session from $135 to >$200|
+- Conversion Bottleneck at Bottom Funnel: Add-to-cart rate remains stable (~40%), Purchase rate significantly lower (~12%) → indicates friction in checkout stage
+
+- Revenue Concentration Risk: Majority of revenue comes from a few channels (Direct, Google, DFA). Heavy reliance on limited acquisition sources
+
+- High-value Users Show Deep Engagement: Purchasers view 6–7x more pages than non-purchasers → strong correlation between engagement depth and conversion
+
+- Declining Revenue per Session: Revenue per purchasing session dropped ~44% → indicates smaller basket size or lower-value transactions
+  
+### 🎯 Recommendations
+
+|Target | Priority actions | 
+| ------ | ------------------------ |
+|Improve Bottom-Funnel Conversion|Simplify and optimize the checkout process (fewer steps, guest checkout, UX clarity)|
+|Optimize Traffic Quality|Re-evaluate low-performing traffic sources (high bounce). Improve landing page relevance|
+|Reduce Channel Dependency|Diversify acquisition channels beyond Direct & Google. Invest in high-converting channels|
+|Increase Average revenue per purchase session|Introduce bundling and “frequently bought together”. Set free shipping thresholds|
+|Enhance Product Discovery|Help users reach relevant products faster, promote top-performing products strategically|
